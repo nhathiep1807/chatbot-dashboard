@@ -163,6 +163,20 @@ export default function BotDetail() {
     const script = localStorage.getItem("chatbotScript");
     if (script) {
       setScriptGenerated(script);
+
+      const d = document;
+      // Create and append the div element
+      const div = d.createElement("div");
+      div.id = "codelight-chatbot";
+      d.getElementsByTagName("body")[0].appendChild(div);
+
+      // Create and append the script element
+      const s = d.createElement("script");
+      s.src =
+        "https://tscout.s3.ap-southeast-1.amazonaws.com/ai-chatbot/codelight-chatbot%20(2).js";
+      s.setAttribute("chat-bot-id", id);
+      s.async = true;
+      d.getElementsByTagName("head")[0].appendChild(s);
     }
   }, []);
 
