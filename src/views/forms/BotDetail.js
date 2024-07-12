@@ -106,22 +106,23 @@ export default function BotDetail() {
 
   const handleGenerateChatbot = () => {
     generateChatbot(id, {
-      onSuccess(data) {
-        console.log({ data });
+      onSuccess(res) {
+        const data = res.data;
         toast.success("Bot generated successfully!");
 
-        // d = document;
-        // // Create and append the div element
-        // div = d.createElement("div");
-        // div.id = "codelight-chatbot";
-        // d.getElementsByTagName("body")[0].appendChild(div);
+        const d = document;
+        // Create and append the div element
+        const div = d.createElement("div");
+        div.id = "codelight-chatbot";
+        d.getElementsByTagName("body")[0].appendChild(div);
 
-        // // Create and append the script element
-        // script = d.createElement("script");
-        // script.src = "http://127.0.0.1:5501/codelight-chatbot.js";
-        // script.setAttribute("chat-bot-id", data.id);
-        // script.async = true;
-        // d.getElementsByTagName("head")[0].appendChild(script);
+        // Create and append the script element
+        const script = d.createElement("script");
+        script.src =
+          "https://tscout.s3.ap-southeast-1.amazonaws.com/ai-chatbot/codelight-chatbot%20(1).js";
+        script.setAttribute("chat-bot-id", id);
+        script.async = true;
+        d.getElementsByTagName("head")[0].appendChild(script);
       },
     });
   };
@@ -286,7 +287,9 @@ export default function BotDetail() {
           <ToastContainer />
         </div>
       )}
-      <Button onClick={handleGenerateChatbot}>Generate AI</Button>
+      {id !== "add" && (
+        <Button onClick={handleGenerateChatbot}>Generate AI</Button>
+      )}
     </div>
   );
 }
