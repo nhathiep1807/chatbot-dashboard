@@ -28,7 +28,7 @@ export default function BotDetail() {
   const { mutate: updateBot } = chatbotQuery.mutation.useUpdateChatbot();
   const { mutate: updateBotKnowledge } =
     chatbotQuery.mutation.useUpdateChatbotKnowledge();
-  const { mutate: generateChatbot } =
+  const { mutate: generateChatbot, isPending } =
     chatbotQuery.mutation.useGenerateChatbot();
   const [formPropertiesData, setFormPropertiesData] = React.useState({
     name: "",
@@ -324,7 +324,9 @@ export default function BotDetail() {
         </div>
       )}
       {id !== "add" && (
-        <Button onClick={handleGenerateChatbot}>Generate AI</Button>
+        <Button onClick={handleGenerateChatbot}>
+          {isPending ? "Generating..." : "Generate AI"}
+        </Button>
       )}
       {scriptGenerated && (
         <div className="script-block">
