@@ -20,6 +20,8 @@ import CreateBotForm from "./CreateBotForm";
 
 export default function BotDetail() {
   const [activeTab, setActiveTab] = React.useState(1);
+  const [scriptGenerated, setScriptGenerated] = React.useState("");
+  const [isCopied, setIsCopied] = React.useState(false);
   const { id } = useParams();
   const { data } = chatbotQuery.useDetail(id);
   const botDetails = data?.data;
@@ -110,6 +112,11 @@ export default function BotDetail() {
         const data = res.data;
         toast.success("Bot generated successfully!");
 
+        const scriptText = `<script type="text/javascript">(function(){d=document;div = d.createElement("div");div.id = "codelight-chatbot";d.getElementsByTagName("body")[0].appendChild(div);script = d.createElement("script");script.src ="https://tscout.s3.ap-southeast-1.amazonaws.com/ai-chatbot/codelight-chatbot%20(2).js";script.setAttribute("chat-bot-id", '${id}');script.async=true;d.getElementsByTagName("head")[0].appendChild(script)})();</script>`;
+
+        setScriptGenerated(scriptText);
+        localStorage.setItem("chatbotScript", scriptText);
+
         const d = document;
         // Create and append the div element
         const div = d.createElement("div");
@@ -119,12 +126,20 @@ export default function BotDetail() {
         // Create and append the script element
         const script = d.createElement("script");
         script.src =
-          "https://tscout.s3.ap-southeast-1.amazonaws.com/ai-chatbot/codelight-chatbot%20(1).js";
+          "https://tscout.s3.ap-southeast-1.amazonaws.com/ai-chatbot/codelight-chatbot%20(2).js";
         script.setAttribute("chat-bot-id", id);
         script.async = true;
         d.getElementsByTagName("head")[0].appendChild(script);
       },
     });
+  };
+
+  const handleCopyScript = () => {
+    navigator.clipboard.writeText(scriptGenerated);
+    setIsCopied(true);
+    setTimeout(() => {
+      setIsCopied(false);
+    }, 3000);
   };
 
   React.useEffect(() => {
@@ -143,6 +158,13 @@ export default function BotDetail() {
       }
     }
   }, [botDetails]);
+
+  React.useEffect(() => {
+    const script = localStorage.getItem("chatbotScript");
+    if (script) {
+      setScriptGenerated(script);
+    }
+  }, []);
 
   return (
     <div className="content">
@@ -289,6 +311,14 @@ export default function BotDetail() {
       )}
       {id !== "add" && (
         <Button onClick={handleGenerateChatbot}>Generate AI</Button>
+      )}
+      {scriptGenerated && (
+        <div className="script-block">
+          <button className="copy-btn" onClick={handleCopyScript}>
+            {isCopied ? "Copied!" : "Copy"}
+          </button>
+          <code>{scriptGenerated}</code>
+        </div>
       )}
     </div>
   );
